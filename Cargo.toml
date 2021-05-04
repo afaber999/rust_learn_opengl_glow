@@ -1,0 +1,38 @@
+[package]
+name = "lean-opengl-glow"
+version = "0.1.0"
+authors = ["Albert Faber <albert@fabtronics.nl>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+glutin="0.26"
+nalgebra-glm = "0.12"
+glow = { version = "0.8.1" }
+log = "0.4"
+anyhow = "1.0"
+thiserror = "1.0"
+bytemuck="1.5"
+image="0.23"
+obj= {version="0.10.2", features = ["genmesh"]}
+
+
+[features]
+default = [
+    "chapter-1",
+    "chapter-2",
+    "chapter-3",
+    "chapter-4",
+    "chapter-5",
+    "chapter-6",
+    "chapter-7"
+]
+chapter-1 = []
+chapter-2 = []
+chapter-3 = []
+chapter-4 = []
+chapter-5 = []
+chapter-6 = []
+chapter-7 = []
+
