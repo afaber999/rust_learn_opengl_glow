@@ -1,3 +1,4 @@
+use glow::*;
 use glutin::event::{Event, VirtualKeyCode, WindowEvent};
 use glutin::event_loop::ControlFlow;
 
@@ -5,13 +6,13 @@ use glutin::event_loop::ControlFlow;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_1_1_1() {
+pub fn main_1_1_2() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _1_1_hello_window")
+            .with_title("learn-opengl-glow => _1_2_hello_window_clear")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -19,6 +20,7 @@ pub fn main_1_1_1() {
             .unwrap()
             .make_current()
             .unwrap();
+        let gl=glow::Context::from_loader_function(|s| window.get_proc_address(s) as *const _);
       
         event_loop.run(move |event, _, control_flow| {
             
@@ -28,6 +30,9 @@ pub fn main_1_1_1() {
                 Event::LoopDestroyed => { return;}
                 Event::RedrawRequested(_) => {
                     // DRAW HERE
+                    gl.clear_color(0.2, 0.3, 0.3, 1.0);
+                    gl.clear(glow::COLOR_BUFFER_BIT);                    
+                    
                     window.swap_buffers().unwrap();
                 },
 
