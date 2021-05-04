@@ -1,7 +1,6 @@
 use glutin::event::{Event, VirtualKeyCode, WindowEvent};
 use glutin::event_loop::ControlFlow;
 
-// // settings
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
