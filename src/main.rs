@@ -1,3 +1,14 @@
+
+
+
+//mod common;
+pub mod shader;
+//mod macros;
+//mod camera;
+//mod mesh;
+//mod model;
+//mod utils;
+
 #[cfg(feature = "chapter-1")]
 mod _1_getting_started;
 #[cfg(feature = "chapter-1")]
@@ -51,9 +62,9 @@ fn main() {
         #[cfg(feature = "chapter-1")] "1_2_3" => main_1_2_3(),
         #[cfg(feature = "chapter-1")] "1_2_4" => main_1_2_4(),
         #[cfg(feature = "chapter-1")] "1_2_5" => main_1_2_5(),
-        #[cfg(feature = "chapter-1")] "1_3_1" | "latest"  => main_1_3_1(),
-        //#[cfg(feature = "chapter-1")] "1_3_2" => main_1_3_2(),
-        // #[cfg(feature = "chapter-1")] "1_3_3" => main_1_3_3(),
+        #[cfg(feature = "chapter-1")] "1_3_1" => main_1_3_1(),
+        #[cfg(feature = "chapter-1")] "1_3_2" => main_1_3_2(),
+        #[cfg(feature = "chapter-1")] "1_3_3"| "latest"   => main_1_3_3(),
         // #[cfg(feature = "chapter-1")] "1_4_1" => main_1_4_1(),
         // #[cfg(feature = "chapter-1")] "1_4_2" => main_1_4_2(),
         // #[cfg(feature = "chapter-1")] "1_5_1" => main_1_5_1(),
