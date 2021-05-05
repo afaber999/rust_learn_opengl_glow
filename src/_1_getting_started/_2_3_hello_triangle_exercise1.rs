@@ -5,13 +5,13 @@ use glutin::event_loop::ControlFlow;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_1_2_2() {
+pub fn main_1_2_3() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _2_2_hello_triangle_indexed")
+            .with_title("learn-opengl-glow => _2_3_hello_triangle_exercise1")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -83,22 +83,21 @@ pub fn main_1_2_2() {
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
-        // HINT: type annotation is crucial since default for float literals is f64
-        let vertices:[f32;12] = [
-            0.5,  0.5, 0.0,   // top right
-            0.5, -0.5, 0.0,   // bottom right
-           -0.5, -0.5, 0.0,   // bottom left
-           -0.5,  0.5, 0.0    // top left 
-        ];
-
-        let indices = [  // note that we start from 0!
-            0, 1, 3,             // first Triangle
-            1, 2, 3             // second Triangle
+        // add a new set of vertices to form a second triangle (a total of 6 vertices); 
+        // the vertex attribute configuration remains the same (still one 3-float position vector per vertex)
+        let vertices:[f32;18] = [
+            // first triangle
+            -0.9, -0.5, 0.0,  // left
+            -0.0, -0.5, 0.0,  // right
+            -0.45, 0.5, 0.0,  // top
+            // second triangle
+            0.0, -0.5, 0.0,  // left
+            0.9, -0.5, 0.0,  // right
+            0.45, 0.5, 0.0   // top
         ];
 
         let vao = gl.create_vertex_array().expect("Create VAO");
         let vbo = gl.create_buffer().expect("Create VBO");
-        let ebo = gl.create_buffer().expect("Create EBO");
 
         // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
         gl.bind_vertex_array( Some(vao) );
@@ -106,10 +105,6 @@ pub fn main_1_2_2() {
         gl.bind_buffer(glow::ARRAY_BUFFER, Some( vbo ));
         let u8_buffer = bytemuck::cast_slice(&vertices[..]);
         gl.buffer_data_u8_slice(glow::ARRAY_BUFFER, u8_buffer, glow::STATIC_DRAW);
-
-        gl.bind_buffer(glow::ELEMENT_ARRAY_BUFFER, Some(ebo));
-        let u8_buffer = bytemuck::cast_slice(&indices[..]);
-        gl.buffer_data_u8_slice(glow::ELEMENT_ARRAY_BUFFER, u8_buffer, glow::STATIC_DRAW);
 
         gl.vertex_attrib_pointer_f32(
             0,              // attribute 0. No particular reason for 0, but must match the layout in the shader.
@@ -124,10 +119,6 @@ pub fn main_1_2_2() {
         // note that this is allowed, the call to glVertexAttribPointer registered VBO as the 
         // vertex attribute's bound vertex buffer object so afterwards we can safely unbind
         gl.bind_buffer(glow::ARRAY_BUFFER, Some(0)); 
-
-        // remember: do NOT unbind the EBO while a VAO is active as the bound 
-        // element buffer object IS stored in the VAO; keep the EBO bound.
-        //self.gl.bind_buffer(glow::ELEMENT_ARRAY_BUFFER, Some(0));
 
         // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO,
         // but this rarely happens. Modifying other VAOs requires a call to glBindVertexArray 
@@ -153,7 +144,9 @@ pub fn main_1_2_2() {
                     // seeing as we only have a single VAO there's no need to bind it every time,
                     // but we'll do so to keep things a bit more organized
                     gl.bind_vertex_array(Some(vao));
-                    gl.draw_elements(glow::TRIANGLES, 6, glow::UNSIGNED_INT,0);
+
+                    // set the count to 6 since we're drawing 6 vertices now (2 triangles); not 3!
+                    gl.draw_arrays(glow::TRIANGLES, 0,6);
 
                     // no need to unbind it every time
                     gl.bind_vertex_array(Some(0));
@@ -177,7 +170,6 @@ pub fn main_1_2_2() {
 
                 Event::LoopDestroyed => {
                     // CLEANUP  
-                    gl.delete_buffer(ebo);
                     gl.delete_buffer(vbo);
                     gl.delete_buffer(vao);
                     gl.delete_program(program);
