@@ -1,6 +1,3 @@
-
-
-
 //mod common;
 pub mod shader;
 //mod macros;
@@ -65,28 +62,28 @@ fn main() {
         #[cfg(feature = "chapter-1")] "1_3_1" => main_1_3_1(),
         #[cfg(feature = "chapter-1")] "1_3_2" => main_1_3_2(),
         #[cfg(feature = "chapter-1")] "1_3_3" => main_1_3_3(),
-        #[cfg(feature = "chapter-1")] "1_4_1"| "latest" => main_1_4_1(),
-        // #[cfg(feature = "chapter-1")] "1_4_2" => main_1_4_2(),
-        // #[cfg(feature = "chapter-1")] "1_5_1" => main_1_5_1(),
-        // #[cfg(feature = "chapter-1")] "1_6_1" => main_1_6_1(),
-        // #[cfg(feature = "chapter-1")] "1_6_2" => main_1_6_2(),
-        // #[cfg(feature = "chapter-1")] "1_6_3" => main_1_6_3(),
-        // #[cfg(feature = "chapter-1")] "1_7_1" => main_1_7_1(),
-        // #[cfg(feature = "chapter-1")] "1_7_2" => main_1_7_2(),
-        // #[cfg(feature = "chapter-1")] "1_7_3" => main_1_7_3(),
-        // #[cfg(feature = "chapter-1")] "1_7_4" => main_1_7_4(),
+        #[cfg(feature = "chapter-1")] "1_4_1" => main_1_4_1(),
+        #[cfg(feature = "chapter-1")] "1_4_2" => main_1_4_2(),
+        #[cfg(feature = "chapter-1")] "1_5_1" => main_1_5_1(),
+        #[cfg(feature = "chapter-1")] "1_6_1" => main_1_6_1(),
+        #[cfg(feature = "chapter-1")] "1_6_2" => main_1_6_2(),
+        #[cfg(feature = "chapter-1")] "1_6_3" => main_1_6_3(),
+        #[cfg(feature = "chapter-1")] "1_7_1" => main_1_7_1(),
+        #[cfg(feature = "chapter-1")] "1_7_2" => main_1_7_2(),
+        #[cfg(feature = "chapter-1")] "1_7_3" => main_1_7_3(),
+        #[cfg(feature = "chapter-1")] "1_7_4"| "latest"  => main_1_7_4(),
 
-        // #[cfg(feature = "chapter-2")] "2_1"   => main_2_1(),
-        // #[cfg(feature = "chapter-2")] "2_2_1" => main_2_2_1(),
-        // #[cfg(feature = "chapter-2")] "2_2_2" => main_2_2_2(),
-        // #[cfg(feature = "chapter-2")] "2_3_1" => main_2_3_1(),
-        // #[cfg(feature = "chapter-2")] "2_4_1" => main_2_4_1(),
-        // #[cfg(feature = "chapter-2")] "2_4_2" => main_2_4_2(),
-        // #[cfg(feature = "chapter-2")] "2_5_1" => main_2_5_1(),
-        // #[cfg(feature = "chapter-2")] "2_5_2" => main_2_5_2(),
-        // #[cfg(feature = "chapter-2")] "2_5_3" => main_2_5_3(),
-        // #[cfg(feature = "chapter-2")] "2_5_4" => main_2_5_4(),
-        // #[cfg(feature = "chapter-2")] "2_6"   => main_2_6(),
+        // #[cfg(feature = "chapter-2")] "2_1"  | "latest"  => main_2_1(),
+        // #[cfg(feature = "chapter-2")] "2_2_1"| "latest"  => main_2_2_1(),
+        // #[cfg(feature = "chapter-2")] "2_2_2"| "latest"  => main_2_2_2(),
+        // #[cfg(feature = "chapter-2")] "2_3_1"| "latest"  => main_2_3_1(),
+        // #[cfg(feature = "chapter-2")] "2_4_1"| "latest"  => main_2_4_1(),
+        // #[cfg(feature = "chapter-2")] "2_4_2"| "latest"  => main_2_4_2(),
+        // #[cfg(feature = "chapter-2")] "2_5_1"| "latest"  => main_2_5_1(),
+        // #[cfg(feature = "chapter-2")] "2_5_2"| "latest"  => main_2_5_2(),
+        // #[cfg(feature = "chapter-2")] "2_5_3"| "latest"  => main_2_5_3(),
+        // #[cfg(feature = "chapter-2")] "2_5_4"| "latest"  => main_2_5_4(),
+        // #[cfg(feature = "chapter-2")] "2_6"  | "latest"  => main_2_6(),
 
         // #[cfg(feature = "chapter-3")] "3_1"   => main_3_1(),
 
