@@ -3,17 +3,18 @@ use glutin::event::{Event, VirtualKeyCode, WindowEvent};
 use glutin::event_loop::ControlFlow;
 use std::rc::Rc;
 use crate::shader::Shader;
+extern crate nalgebra_glm as glm;
 
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_1_4_1() {
+pub fn main_1_6_1() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _4_1_textures")
+            .with_title("learn-opengl-glow => _6_1_coordinate_systems")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -26,19 +27,19 @@ pub fn main_1_4_1() {
 
         let shader = Shader::new_from_files(
             gl.clone(),
-            "src/_1_getting_started/shaders/4.1.texture.vs",
-            "src/_1_getting_started/shaders/4.1.texture.fs"
+            "src/_1_getting_started/shaders/6.1.coordinate_systems.vs",
+            "src/_1_getting_started/shaders/6.1.coordinate_systems.fs"
         );
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
         // HINT: type annotation is crucial since default for float literals is f64
-        let vertices:[f32;32] = [
-            // positions       // colors        // texture coords
-             0.5,  0.5, 0.0,   1.0, 0.0, 0.0,   1.0, 1.0, // top right
-             0.5, -0.5, 0.0,   0.0, 1.0, 0.0,   1.0, 0.0, // bottom right
-            -0.5, -0.5, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0, // bottom left
-            -0.5,  0.5, 0.0,   1.0, 1.0, 0.0,   0.0, 1.0  // top left 
+        let vertices:[f32;20] = [
+            // positions     // texture coords
+             0.5,  0.5, 0.0, 1.0, 1.0, // top right
+             0.5, -0.5, 0.0, 1.0, 0.0, // bottom right
+            -0.5, -0.5, 0.0, 0.0, 0.0, // bottom left
+            -0.5,  0.5, 0.0, 0.0, 1.0  // top left 
         ];
         let indices = [
             0, 1, 3,  // first Triangle
@@ -66,39 +67,28 @@ pub fn main_1_4_1() {
             3,
             glow::FLOAT,
             false,
-            std::mem::size_of::<f32>() as i32 * 8,
+            std::mem::size_of::<f32>() as i32 * 5,
             0);
 
         gl.enable_vertex_attrib_array(0);
         
-        // Color attribute 1. No particular reason for 1, but must match the layout in the shader.
+        // Texture coord attribute 2. No particular reason for 2, but must match the layout in the shader.
         gl.vertex_attrib_pointer_f32(
             1,              
-            3,
+            2,
             glow::FLOAT,
             false,
-            std::mem::size_of::<f32>() as i32 * 8,
+            std::mem::size_of::<f32>() as i32 * 5,
             std::mem::size_of::<f32>() as i32 * 3);
 
         gl.enable_vertex_attrib_array(1);
 
-        // Texture coord attribute 2. No particular reason for 2, but must match the layout in the shader.
-        gl.vertex_attrib_pointer_f32(
-            2,              
-            2,
-            glow::FLOAT,
-            false,
-            std::mem::size_of::<f32>() as i32 * 8,
-            std::mem::size_of::<f32>() as i32 * 6);
-
-        gl.enable_vertex_attrib_array(2);
-
-        // load and create a texture
+        // load and create a texture 1
         // -------------------------        
-        let texture = Some( gl.create_texture().expect("Create a texture") );
+        let texture_1 = Some( gl.create_texture().expect("Create a texture") );
 
         // bind texture, all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-        gl.bind_texture(glow::TEXTURE_2D, texture);
+        gl.bind_texture(glow::TEXTURE_2D, texture_1);
 
         // set the texture wrapping & repeat parameters
         gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_S, glow::REPEAT as i32);
@@ -126,18 +116,52 @@ pub fn main_1_4_1() {
 
         gl.generate_mipmap(glow::TEXTURE_2D);
         
+
+        // load and create a texture 2
+        // -------------------------        
+        let texture_2 = Some( gl.create_texture().expect("Create a texture") );
+
+        // bind texture, all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+        gl.bind_texture(glow::TEXTURE_2D, texture_2);
+
+        // set the texture wrapping & repeat parameters
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_S, glow::REPEAT as i32);
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_T, glow::REPEAT as i32);
+
+        // set texture filtering parameters
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_MAG_FILTER, glow::LINEAR as i32);
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_MIN_FILTER, glow::LINEAR as i32);
+
+        // load image, create texture and generate mipmaps
+        let img = image::open("resources/textures/awesomeface.png").unwrap().flipv().into_rgba8();
+        let (img_w, img_h) = img.dimensions();
+        let raw_img = img.into_raw();
+     
+        // Give the image to OpenGL
+        gl.tex_image_2d(glow::TEXTURE_2D,
+                            0, 
+                            glow::RGB as i32, 
+                            img_w as i32, 
+                            img_h as i32,
+                            0, 
+                            glow::RGBA,  // include alpha channel
+                            glow::UNSIGNED_BYTE,
+                            Some(&raw_img) );
+
+        gl.generate_mipmap(glow::TEXTURE_2D);
         
-        // see next section, it's better to set this explicit
         // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
         // -------------------------------------------------------------------------------------------
-        shader.use_program(); // don't forget to activate/use the shader before setting uniforms!
+        shader.use_program();
 
         // or set it via the texture class
         shader.set_uniform_i32("texture1", 0);
+        shader.set_uniform_i32("texture2", 1);        
 
 
         const DESIRED_FRAME_TIME :f32 = 0.02;
         let mut last_draw_time = std::time::Instant::now();
+        let mut _frame_time= 0.0f32;
 
         event_loop.run(move |event, _, control_flow| {
             
@@ -145,6 +169,7 @@ pub fn main_1_4_1() {
             let elapsed_time = now.duration_since(last_draw_time).as_secs_f32();
 
             if  elapsed_time > DESIRED_FRAME_TIME {
+                _frame_time += elapsed_time;
                 window.window().request_redraw();
                 last_draw_time = now;
             }
@@ -155,11 +180,36 @@ pub fn main_1_4_1() {
                     gl.clear_color(0.2, 0.3, 0.3, 1.0);
                     gl.clear(glow::COLOR_BUFFER_BIT);                    
 
-                    // bind texture
-                    gl.bind_texture(glow::TEXTURE_2D, texture);
+                    // bind textures on corresponding texture units
+                    gl.active_texture(glow::TEXTURE0);
+                    gl.bind_texture(glow::TEXTURE_2D, texture_1);
+                    gl.active_texture(glow::TEXTURE1);
+                    gl.bind_texture(glow::TEXTURE_2D, texture_2);
 
-                    // render container                    
+
+                    // create transformations
+                    let mut model = glm::Mat4::identity();
+                    let mut view = glm::Mat4::identity(); 
+                    
+                    let aspect = SCR_WIDTH as f32/ SCR_HEIGHT as f32;
+                    let field_of_view = 45f32;
+
+                    // select one of the model matrices 
+                    model = glm::rotate(&model,-55.0f32.to_radians(), &glm::vec3(0.5, -0.5, 0.0));
+                    //model = glm::rotate(&model,-55.0f32.to_radians(), &glm::vec3(1.0, 0.0, 0.0));
+                    view = glm::translate(&view, &glm::vec3(0.0,0.0,-3.0));
+                    let projection = glm::perspective(aspect, field_of_view.to_radians(), 0.1f32, 100.0f32);
+
+                    // get matrix's uniform location and set matrix
                     shader.use_program();
+                    shader.set_uniform_mat4("model", &model);
+                    shader.set_uniform_mat4("view", &view);
+
+                    // note: currently we set the projection matrix each frame, but since the projection 
+                    // matrix rarely changes it's often best practice to set it outside the main loop only once.
+                    shader.set_uniform_mat4("projection", &projection);
+
+                    // render container
                     gl.bind_vertex_array(Some(vao));
                     gl.draw_elements(glow::TRIANGLES, 6, glow::UNSIGNED_INT,0);
 
@@ -184,7 +234,8 @@ pub fn main_1_4_1() {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
                     gl.delete_buffer(vao);
-                    if let Some(id) = texture { gl.delete_texture(id);}
+                    if let Some(id) = texture_1 { gl.delete_texture(id);}
+                    if let Some(id) = texture_2 { gl.delete_texture(id);}
                 },
                 _ => {}
             }

@@ -7,13 +7,13 @@ use crate::shader::Shader;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_1_4_1() {
+pub fn main_1_4_2() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _4_1_textures")
+            .with_title("learn-opengl-glow => _4_2_textures_combined")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -26,8 +26,8 @@ pub fn main_1_4_1() {
 
         let shader = Shader::new_from_files(
             gl.clone(),
-            "src/_1_getting_started/shaders/4.1.texture.vs",
-            "src/_1_getting_started/shaders/4.1.texture.fs"
+            "src/_1_getting_started/shaders/4.2.texture.vs",
+            "src/_1_getting_started/shaders/4.2.texture.fs"
         );
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -93,12 +93,12 @@ pub fn main_1_4_1() {
 
         gl.enable_vertex_attrib_array(2);
 
-        // load and create a texture
+        // load and create a texture 1
         // -------------------------        
-        let texture = Some( gl.create_texture().expect("Create a texture") );
+        let texture_1 = Some( gl.create_texture().expect("Create a texture") );
 
         // bind texture, all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-        gl.bind_texture(glow::TEXTURE_2D, texture);
+        gl.bind_texture(glow::TEXTURE_2D, texture_1);
 
         // set the texture wrapping & repeat parameters
         gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_S, glow::REPEAT as i32);
@@ -126,14 +126,47 @@ pub fn main_1_4_1() {
 
         gl.generate_mipmap(glow::TEXTURE_2D);
         
+
+        // load and create a texture 2
+        // -------------------------        
+        let texture_2 = Some( gl.create_texture().expect("Create a texture") );
+
+        // bind texture, all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+        gl.bind_texture(glow::TEXTURE_2D, texture_2);
+
+        // set the texture wrapping & repeat parameters
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_S, glow::REPEAT as i32);
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_T, glow::REPEAT as i32);
+
+        // set texture filtering parameters
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_MAG_FILTER, glow::LINEAR as i32);
+        gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_MIN_FILTER, glow::LINEAR as i32);
+
+        // load image, create texture and generate mipmaps
+        let img = image::open("resources/textures/awesomeface.png").unwrap().flipv().into_rgba8();
+        let (img_w, img_h) = img.dimensions();
+        let raw_img = img.into_raw();
+     
+        // Give the image to OpenGL
+        gl.tex_image_2d(glow::TEXTURE_2D,
+                            0, 
+                            glow::RGB as i32, 
+                            img_w as i32, 
+                            img_h as i32,
+                            0, 
+                            glow::RGBA,  // include alpha channel
+                            glow::UNSIGNED_BYTE,
+                            Some(&raw_img) );
+
+        gl.generate_mipmap(glow::TEXTURE_2D);
         
-        // see next section, it's better to set this explicit
         // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
         // -------------------------------------------------------------------------------------------
-        shader.use_program(); // don't forget to activate/use the shader before setting uniforms!
+        shader.use_program();
 
         // or set it via the texture class
         shader.set_uniform_i32("texture1", 0);
+        shader.set_uniform_i32("texture2", 1);        
 
 
         const DESIRED_FRAME_TIME :f32 = 0.02;
@@ -155,8 +188,11 @@ pub fn main_1_4_1() {
                     gl.clear_color(0.2, 0.3, 0.3, 1.0);
                     gl.clear(glow::COLOR_BUFFER_BIT);                    
 
-                    // bind texture
-                    gl.bind_texture(glow::TEXTURE_2D, texture);
+                    // bind textures on corresponding texture units
+                    gl.active_texture(glow::TEXTURE0);
+                    gl.bind_texture(glow::TEXTURE_2D, texture_1);
+                    gl.active_texture(glow::TEXTURE1);
+                    gl.bind_texture(glow::TEXTURE_2D, texture_2);
 
                     // render container                    
                     shader.use_program();
@@ -184,7 +220,8 @@ pub fn main_1_4_1() {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
                     gl.delete_buffer(vao);
-                    if let Some(id) = texture { gl.delete_texture(id);}
+                    if let Some(id) = texture_1 { gl.delete_texture(id);}
+                    if let Some(id) = texture_2 { gl.delete_texture(id);}
                 },
                 _ => {}
             }
