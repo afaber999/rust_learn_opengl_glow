@@ -136,7 +136,6 @@ pub fn main_1_3_2() {
         // gl.polygon_mode(glow::FRONT_AND_BACK, glow::LINE);
         const DESIRED_FRAME_TIME :f32 = 0.02;
         let mut last_draw_time = std::time::Instant::now();
-        let mut frame_time= 0.0f32;
 
         event_loop.run(move |event, _, control_flow| {
             
@@ -144,7 +143,6 @@ pub fn main_1_3_2() {
             let elapsed_time = now.duration_since(last_draw_time).as_secs_f32();
 
             if  elapsed_time > DESIRED_FRAME_TIME {
-                frame_time += elapsed_time;
                 window.window().request_redraw();
                 last_draw_time = now;
             }
