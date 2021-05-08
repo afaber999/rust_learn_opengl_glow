@@ -8,13 +8,13 @@ extern crate nalgebra_glm as glm;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_2_4_1() {
+pub fn main_2_4_2() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _4_1_lighting_maps_diffuse_map")
+            .with_title("learn-opengl-glow => _4_2_lighting_maps_specular_map")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -27,14 +27,14 @@ pub fn main_2_4_1() {
 
         let shader_cube = Shader::new_from_files(
             gl.clone(),
-            "src/_2_lighting/shaders/4.1.lighting_maps.vs",
-            "src/_2_lighting/shaders/4.1.lighting_maps.fs"
+            "src/_2_lighting/shaders/4.2.lighting_maps.vs",
+            "src/_2_lighting/shaders/4.2.lighting_maps.fs"
         );
 
         let shader_light = Shader::new_from_files(
             gl.clone(),
-            "src/_2_lighting/shaders/4.1.lamp.vs",
-            "src/_2_lighting/shaders/4.1.lamp.fs"
+            "src/_2_lighting/shaders/4.2.lamp.vs",
+            "src/_2_lighting/shaders/4.2.lamp.fs"
         );
 
         let light_pos = glm::vec3(0.5, 0.5, 2.0);
@@ -148,8 +148,9 @@ pub fn main_2_4_1() {
 
         gl.enable_vertex_attrib_array(0);
 
-        let texture = Texture::new(gl.clone(), "resources/textures/container2.png");
-        
+        let diffuse_map = Texture::new(gl.clone(),"resources/textures/container2.png");
+        let specular_map = Texture::new(gl.clone(),"resources/textures/container2_specular.png");
+
         // shader configuration
         // --------------------
         shader_cube.use_program();
@@ -197,7 +198,7 @@ pub fn main_2_4_1() {
         
                     // material properties
                     shader_cube.set_uniform_i32("material.diffuse", 0); // point to diffuse map index!
-                    shader_cube.set_uniform_3_f32("material.specular", 0.5, 0.5, 0.5);
+                    shader_cube.set_uniform_i32("material.specular", 1); // point to specular map index!
                     shader_cube.set_uniform_f32("material.shininess", 64.0);
 
                     shader_cube.set_uniform_vec3("viewPos", &camera.get_position()); 
@@ -207,7 +208,9 @@ pub fn main_2_4_1() {
                     
                     // setup texture
                     gl.active_texture(glow::TEXTURE0);
-                    texture.bind();
+                    diffuse_map.bind();
+                    gl.active_texture(glow::TEXTURE1);
+                    specular_map.bind();
 
                     // render cube
                     gl.bind_vertex_array(Some(vao_cube));
