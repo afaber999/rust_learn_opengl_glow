@@ -123,6 +123,7 @@ pub fn main_2_2_2() {
         // second configure the light source
         // -----------------------------------
         let vao_light = gl.create_vertex_array().expect("Create VAO");
+        gl.bind_vertex_array( Some(vao_light) );
         gl.bind_buffer(glow::ARRAY_BUFFER, Some(vbo));    
         
         // Vertex position attribute 0.
@@ -196,9 +197,8 @@ pub fn main_2_2_2() {
                     shader_light.set_uniform_mat4("model", &model);
 
                     // render light source
-                    gl.bind_vertex_array(Some(vao_cube));
+                    gl.bind_vertex_array(Some(vao_light));
                     gl.draw_arrays(glow::TRIANGLES, 0,  36);
-
 
                     window.swap_buffers().unwrap();
                 },

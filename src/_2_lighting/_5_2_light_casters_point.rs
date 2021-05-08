@@ -8,13 +8,13 @@ extern crate nalgebra_glm as glm;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_2_4_1() {
+pub fn main_2_5_2() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _4_1_lighting_maps_diffuse_map")
+            .with_title("learn-opengl-glow => _5_2_light_casters_point")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -27,17 +27,16 @@ pub fn main_2_4_1() {
 
         let shader_cube = Shader::new_from_files(
             gl.clone(),
-            "src/_2_lighting/shaders/4.1.lighting_maps.vs",
-            "src/_2_lighting/shaders/4.1.lighting_maps.fs"
+            "src/_2_lighting/shaders/5.2.light_casters.vs",
+            "src/_2_lighting/shaders/5.2.light_casters.fs"
         );
 
         let shader_light = Shader::new_from_files(
             gl.clone(),
-            "src/_2_lighting/shaders/4.1.lamp.vs",
-            "src/_2_lighting/shaders/4.1.lamp.fs"
+            "src/_2_lighting/shaders/5.2.lamp.vs",
+            "src/_2_lighting/shaders/5.2.lamp.fs"
         );
 
-        let light_pos = glm::vec3(0.5, 0.5, 2.0);
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
@@ -85,6 +84,19 @@ pub fn main_2_4_1() {
              0.5,  0.5,  0.5,  0.0,  1.0,  0.0,  1.0,  0.0,
             -0.5,  0.5,  0.5,  0.0,  1.0,  0.0,  0.0,  0.0,
             -0.5,  0.5, -0.5,  0.0,  1.0,  0.0,  0.0,  1.0
+        ];
+
+        let cube_positions:[_;10] = [
+            glm::vec3( 0.0,  0.0,  0.0),
+            glm::vec3( 2.0,  5.0, -15.0),
+            glm::vec3(-1.5, -2.2, -2.5),
+            glm::vec3(-3.8, -2.0, -12.0),
+            glm::vec3( 2.4, -0.4, -3.5),
+            glm::vec3(-1.7,  3.0, -7.5),
+            glm::vec3( 1.3, -2.0, -2.5),
+            glm::vec3( 1.5,  2.0, -2.5),
+            glm::vec3( 1.5,  0.2, -1.5),
+            glm::vec3(-1.3,  1.0, -1.5)
         ];
 
         // first configure the cube
@@ -149,8 +161,9 @@ pub fn main_2_4_1() {
 
         gl.enable_vertex_attrib_array(0);
 
-        let texture = Texture::new(gl.clone(), "resources/textures/container2.png");
-        
+        let diffuse_map = Texture::new(gl.clone(),"resources/textures/container2.png");
+        let specular_map = Texture::new(gl.clone(),"resources/textures/container2_specular.png");
+
         // shader configuration
         // --------------------
         shader_cube.use_program();
@@ -186,33 +199,48 @@ pub fn main_2_4_1() {
                     // setup cube transformations
                     let aspect = SCR_WIDTH as f32/ SCR_HEIGHT as f32;
                     let projection = glm::perspective(aspect, camera.get_zoom().to_radians(), 0.1f32, 100.0f32);
-                    let model = glm::translate(&glm::Mat4::identity(), &glm::vec3(0.0,0.0,0.0) );
                     
                     shader_cube.use_program();
 
                     // light properties
-                    shader_cube.set_uniform_vec3("light.position", &light_pos);
+                    let light_pos = glm::vec3(1.2, 1.0, 2.0);
+
+                    shader_cube.set_uniform_vec3("light.position",&light_pos);
                     shader_cube.set_uniform_3_f32("light.ambient", 0.2,0.2,0.2);
                     shader_cube.set_uniform_3_f32("light.diffuse", 0.5,0.5,0.5);
                     shader_cube.set_uniform_3_f32("light.specular", 1.0, 1.0, 1.0);
         
+                    shader_cube.set_uniform_f32("light.constant", 1.0);
+                    shader_cube.set_uniform_f32("light.linear", 0.09);
+                    shader_cube.set_uniform_f32("light.quadratic", 0.032);
+                    
                     // material properties
                     shader_cube.set_uniform_i32("material.diffuse", 0); // point to diffuse map index!
-                    shader_cube.set_uniform_3_f32("material.specular", 0.5, 0.5, 0.5);
-                    shader_cube.set_uniform_f32("material.shininess", 64.0);
+                    shader_cube.set_uniform_i32("material.specular", 1); // point to specular map index!
+                    shader_cube.set_uniform_f32("material.shininess", 32.0);
 
                     shader_cube.set_uniform_vec3("viewPos", &camera.get_position()); 
                     shader_cube.set_uniform_mat4("view", &camera.get_view_matrix());
                     shader_cube.set_uniform_mat4("projection", &projection);
-                    shader_cube.set_uniform_mat4("model", &model);
                     
                     // setup texture
                     gl.active_texture(glow::TEXTURE0);
-                    texture.bind();
+                    diffuse_map.bind();
+                    gl.active_texture(glow::TEXTURE1);
+                    specular_map.bind();
 
                     // render cube
                     gl.bind_vertex_array(Some(vao_cube));
-                    gl.draw_arrays(glow::TRIANGLES, 0,  36);
+
+                    for (idx, pos) in cube_positions.iter().enumerate() {
+
+                        let mut model = glm::translate(&glm::Mat4::identity(), pos);
+                        let angle = idx as f32 /3.0;
+                        model = glm::rotate(&model,angle, &glm::vec3(1.0, 0.3, 0.5));
+        
+                        shader_cube.set_uniform_mat4("model", &model);
+                        gl.draw_arrays(glow::TRIANGLES, 0,  36);
+                    }                    
 
                     // setup light source transformations (only the object model changes)
                     let model =  glm::scale( &glm::translate(
