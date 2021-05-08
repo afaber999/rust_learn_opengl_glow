@@ -3,6 +3,8 @@ extern crate nalgebra_glm as glm;
 pub enum Directions {
     Left,
     Right,
+    Up,
+    Down,
     Forward,
     Backward,
 }
@@ -49,7 +51,7 @@ impl Camera {
 
 
     pub fn get_zoom(&self) -> f32 {self.zoom}
-    //pub fn get_position(&self) -> &glm::Vec3 {&self.position}
+    pub fn get_position(&self) -> &glm::Vec3 {&self.position}
 
     pub fn get_view_matrix(&self) -> glm::Mat4 
     {
@@ -70,6 +72,12 @@ impl Camera {
             }
             Directions::Right => {
                 self.position += self.right * velocity;
+            }
+            Directions::Up => {
+                self.position += self.up * velocity;
+            }
+            Directions::Down => {
+                self.position -= self.up * velocity;
             }
             Directions::Backward => {
                 self.position -= self.front * velocity;

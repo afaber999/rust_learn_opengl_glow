@@ -1,7 +1,8 @@
 //mod common;
 pub mod shader;
 //mod macros;
-mod camera;
+pub mod camera;
+pub mod texture;
 //mod mesh;
 //mod model;
 //mod utils;
@@ -74,11 +75,11 @@ fn main() {
         #[cfg(feature = "chapter-1")] "1_7_3" => main_1_7_3(),
         #[cfg(feature = "chapter-1")] "1_7_4" => main_1_7_4(),
 
-        #[cfg(feature = "chapter-2")] "2_1"  | "latest"  => main_2_1(),
-        // #[cfg(feature = "chapter-2")] "2_2_1"| "latest"  => main_2_2_1(),
-        // #[cfg(feature = "chapter-2")] "2_2_2"| "latest"  => main_2_2_2(),
-        // #[cfg(feature = "chapter-2")] "2_3_1"| "latest"  => main_2_3_1(),
-        // #[cfg(feature = "chapter-2")] "2_4_1"| "latest"  => main_2_4_1(),
+        #[cfg(feature = "chapter-2")] "2_1"   => main_2_1(),
+        #[cfg(feature = "chapter-2")] "2_2_1" => main_2_2_1(),
+        #[cfg(feature = "chapter-2")] "2_2_2" => main_2_2_2(),
+        #[cfg(feature = "chapter-2")] "2_3_1"  => main_2_3_1(),
+        #[cfg(feature = "chapter-2")] "2_4_1"| "latest"  => main_2_4_1(),
         // #[cfg(feature = "chapter-2")] "2_4_2"| "latest"  => main_2_4_2(),
         // #[cfg(feature = "chapter-2")] "2_5_1"| "latest"  => main_2_5_1(),
         // #[cfg(feature = "chapter-2")] "2_5_2"| "latest"  => main_2_5_2(),

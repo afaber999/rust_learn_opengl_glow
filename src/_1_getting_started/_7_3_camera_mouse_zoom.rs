@@ -214,8 +214,6 @@ pub fn main_1_7_3() {
 
         let mut field_of_view = 45f32;
         
-
-
         const DESIRED_FRAME_TIME :f32 = 0.02;
         let mut last_draw_time = std::time::Instant::now();
         let mut _frame_time= 0.0f32;
@@ -248,9 +246,7 @@ pub fn main_1_7_3() {
                     gl.active_texture(glow::TEXTURE1);
                     gl.bind_texture(glow::TEXTURE_2D, texture_2);
 
-
                     // create transformations
-                    
                     let aspect = SCR_WIDTH as f32/ SCR_HEIGHT as f32;
 
                     // setup view and projection matrix
