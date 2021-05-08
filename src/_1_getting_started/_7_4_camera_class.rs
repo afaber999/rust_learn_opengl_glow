@@ -2,7 +2,7 @@ use glow::*;
 use glutin::event::{Event, VirtualKeyCode, WindowEvent, ElementState, MouseButton};
 use glutin::event_loop::ControlFlow;
 use std::rc::Rc;
-use crate::shader::Shader;
+use crate::{camera::{Camera, Directions}, shader::Shader};
 extern crate nalgebra_glm as glm;
 
 const SCR_WIDTH: u32 = 800;
@@ -200,27 +200,16 @@ pub fn main_1_7_4() {
         shader.set_uniform_i32("texture1", 0);
         shader.set_uniform_i32("texture2", 1);        
 
-        let mut camera_pos  = glm::vec3(0.0, 0.0,  3.0);
-        let mut camera_front= glm::vec3(0.0, 0.0, -1.0);
-        let camera_up   = glm::vec3(0.0, 1.0,  0.0);
-
+        let mut camera = Camera::new(glm::vec3( 0.0, 0.0, 3.0));
 
         let mut is_dragging = false;
-        let mut yaw = -90.0f32;
-        let mut pitch = 0.0f32;
-
         let mut last_x = SCR_WIDTH as f32 / 2.0;
         let mut last_y = SCR_HEIGHT as f32 / 2.0;
-
-        let mut field_of_view = 45f32;
-        
 
 
         const DESIRED_FRAME_TIME :f32 = 0.02;
         let mut last_draw_time = std::time::Instant::now();
         let mut _frame_time= 0.0f32;
-        let camera_speed = 2.5f32 * DESIRED_FRAME_TIME;
-        let mouse_sensitivity = 0.1f32;
         
         event_loop.run(move |event, _, control_flow| {
             
@@ -239,7 +228,6 @@ pub fn main_1_7_4() {
                     gl.clear_color(0.2, 0.3, 0.3, 1.0);
 
                     // enable depth test and clear the color and depth buffer
-                    // disable gl.enable(glow::DEPTH_TEST) for excercise 6.2
                     gl.enable(glow::DEPTH_TEST);
                     gl.clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
 
@@ -249,22 +237,14 @@ pub fn main_1_7_4() {
                     gl.active_texture(glow::TEXTURE1);
                     gl.bind_texture(glow::TEXTURE_2D, texture_2);
 
-
                     // create transformations
-                    
                     let aspect = SCR_WIDTH as f32/ SCR_HEIGHT as f32;
 
-                    // setup view and projection matrix
-                    let view = glm::look_at(
-                        &camera_pos, 
-                        &(camera_pos + &camera_front), 
-                        &camera_up);
-
-                    let projection = glm::perspective(aspect, field_of_view.to_radians(), 0.1f32, 100.0f32);
+                    let projection = glm::perspective(aspect, camera.get_zoom().to_radians(), 0.1f32, 100.0f32);
 
                     // get matrix's uniform location and set matrix
                     shader.use_program();
-                    shader.set_uniform_mat4("view", &view);
+                    shader.set_uniform_mat4("view", &camera.get_view_matrix());
                     shader.set_uniform_mat4("projection", &projection);
 
                     // render container
@@ -288,16 +268,14 @@ pub fn main_1_7_4() {
                     WindowEvent::Resized(physical_size) => window.resize(*physical_size),
                     WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
                     WindowEvent::KeyboardInput { device_id:_, input, is_synthetic:_ } => {
-                        let up_down = camera_speed * camera_front;
-                        let left_right = glm::normalize(&glm::cross(&camera_front, &camera_up)) * camera_speed;
                         match input.virtual_keycode {
                             Some(key) => {
                                 match key {
                                     VirtualKeyCode::Escape => *control_flow = glutin::event_loop::ControlFlow::Exit,
-                                    VirtualKeyCode::W => camera_pos += up_down,
-                                    VirtualKeyCode::A => camera_pos -= left_right,
-                                    VirtualKeyCode::S => camera_pos-= up_down,
-                                    VirtualKeyCode::D => camera_pos += left_right,
+                                    VirtualKeyCode::W => camera.key_interact(Directions::Forward),
+                                    VirtualKeyCode::A => camera.key_interact(Directions::Left),
+                                    VirtualKeyCode::S => camera.key_interact(Directions::Backward),
+                                    VirtualKeyCode::D => camera.key_interact(Directions::Right),
                                     _ => (),
                                 }
                             },
@@ -310,16 +288,8 @@ pub fn main_1_7_4() {
                         let new_y = position.y as f32;
 
                         if is_dragging {
-                            yaw += (new_x - last_x) * mouse_sensitivity;
-                            pitch -= (new_y - last_y) * mouse_sensitivity;
-                            pitch = pitch.max(-90.0).min(90.0);
-                                
-                            camera_front = glm::vec3(
-                                yaw.to_radians().cos() * pitch.to_radians().cos(),
-                                pitch.to_radians().sin(),
-                                yaw.to_radians().sin() * pitch.to_radians().cos() ).normalize();
+                            camera.mouse_interact(new_x - last_x, new_y - last_y);                            
                         }
-
                         last_x = new_x;
                         last_y = new_y;
                     },
@@ -335,7 +305,7 @@ pub fn main_1_7_4() {
                     WindowEvent::MouseWheel { device_id:_, delta, phase :_, .. } => {
                         match delta {
                             glutin::event::MouseScrollDelta::LineDelta(_x,y) => {
-                                field_of_view = (field_of_view + y).max(1.0).min(55.0);
+                                camera.scroll_wheel_interact(*y);
                             },
                             _ => (),
                         }

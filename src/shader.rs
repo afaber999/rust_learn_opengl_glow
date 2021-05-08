@@ -4,6 +4,7 @@ use std::rc::Rc;
 use std::collections::HashMap;
 use std::cell::RefCell;
 use core::convert::TryInto;
+use std::ops::Drop;
 
 #[derive(Debug)]
 pub struct Shader {
@@ -13,7 +14,6 @@ pub struct Shader {
 }
 
 impl Shader {
-
     /// Create new shader form two strings
     /// ------------------------------------------------------------------------
     pub fn new_from_strings(gl : Rc<glow::Context>, vx_shader:&str, fg_shader:&str )-> Self{
@@ -123,6 +123,27 @@ impl Shader {
         }
     }
 
+    /// Set uniform as f32
+    /// ------------------------------------------------------------------------    
+    pub fn set_uniform_f32(&self,  field:&str, value: f32) {
+
+        if let Some(pgm) = self.program {
+            unsafe {
+                let mut uniform_lookup = self.uniform_lookup.borrow_mut();
+                let location = uniform_lookup.get(field);
+                if location.is_some() {
+                    self.gl.uniform_1_f32(location, value);
+                } else {
+                    let location =  self.gl.get_uniform_location(pgm, field);
+                    self.gl.uniform_1_f32(location.as_ref(), value);
+                    if let Some( loc ) = location {
+                        uniform_lookup.insert(field.into(), loc);
+                    } 
+                }
+            }    
+        }
+    }
+
     /// Set uniform as i32
     /// ------------------------------------------------------------------------    
     pub fn set_uniform_i32(&self,  field:&str, value: i32) {
@@ -178,6 +199,17 @@ impl Shader {
                     } 
                 }
             }    
+        }
+    }
+}
+
+
+impl Drop for Shader {
+    fn drop(&mut self) {
+        unsafe {
+            if let Some(id) = self.program {
+                self.gl.delete_program(id);
+            }
         }
     }
 }

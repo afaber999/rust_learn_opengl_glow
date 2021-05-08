@@ -222,7 +222,6 @@ pub fn main_1_6_3() {
                     gl.clear_color(0.2, 0.3, 0.3, 1.0);
 
                     // enable depth test and clear the color and depth buffer
-                    // disable gl.enable(glow::DEPTH_TEST) for excercise 6.2
                     gl.enable(glow::DEPTH_TEST);
                     gl.clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
 

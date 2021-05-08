@@ -214,8 +214,6 @@ pub fn main_1_7_3() {
 
         let mut field_of_view = 45f32;
         
-
-
         const DESIRED_FRAME_TIME :f32 = 0.02;
         let mut last_draw_time = std::time::Instant::now();
         let mut _frame_time= 0.0f32;
@@ -239,7 +237,6 @@ pub fn main_1_7_3() {
                     gl.clear_color(0.2, 0.3, 0.3, 1.0);
 
                     // enable depth test and clear the color and depth buffer
-                    // disable gl.enable(glow::DEPTH_TEST) for excercise 6.2
                     gl.enable(glow::DEPTH_TEST);
                     gl.clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
 
@@ -249,9 +246,7 @@ pub fn main_1_7_3() {
                     gl.active_texture(glow::TEXTURE1);
                     gl.bind_texture(glow::TEXTURE_2D, texture_2);
 
-
                     // create transformations
-                    
                     let aspect = SCR_WIDTH as f32/ SCR_HEIGHT as f32;
 
                     // setup view and projection matrix
