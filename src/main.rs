@@ -3,8 +3,9 @@ pub mod shader;
 //mod macros;
 pub mod camera;
 pub mod texture;
-//mod mesh;
-//mod model;
+pub mod mesh;
+pub mod mesh_cube;
+pub mod model;
 //mod utils;
 
 
@@ -18,10 +19,10 @@ mod _2_lighting;
 #[cfg(feature = "chapter-2")]
 use _2_lighting::*;
 
-// #[cfg(feature = "chapter-3")]
-// mod _3_model_loading;
-// #[cfg(feature = "chapter-3")]
-// use _3_model_loading::*;
+#[cfg(feature = "chapter-3")]
+mod _3_model_loading;
+#[cfg(feature = "chapter-3")]
+use _3_model_loading::*;
 
 // #[cfg(feature = "chapter-4")]
 // mod _4_advanced_opengl;
@@ -82,12 +83,13 @@ fn main() {
         #[cfg(feature = "chapter-2")] "2_4_1" => main_2_4_1(),
         #[cfg(feature = "chapter-2")] "2_4_2" => main_2_4_2(),
         #[cfg(feature = "chapter-2")] "2_5_1" => main_2_5_1(),
-        #[cfg(feature = "chapter-2")] "2_5_2"  => main_2_5_2(),
-        #[cfg(feature = "chapter-2")] "2_5_3"  => main_2_5_3(),
-        #[cfg(feature = "chapter-2")] "2_5_4"| "latest"  => main_2_5_4(),
+        #[cfg(feature = "chapter-2")] "2_5_2" => main_2_5_2(),
+        #[cfg(feature = "chapter-2")] "2_5_3" => main_2_5_3(),
+        #[cfg(feature = "chapter-2")] "2_5_4" => main_2_5_4(),
         // #[cfg(feature = "chapter-2")] "2_6"  | "latest"  => main_2_6(),
 
         // #[cfg(feature = "chapter-3")] "3_1"   => main_3_1(),
+        #[cfg(feature = "chapter-3")] "mesh_tester" | "latest"   => main_mesh_tester(),
 
         // #[cfg(feature = "chapter-4")] "4_1_1" => main_4_1_1(),
         // #[cfg(feature = "chapter-4")] "4_1_2" => main_4_1_2(),
