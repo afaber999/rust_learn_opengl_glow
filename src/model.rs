@@ -24,7 +24,7 @@ impl Model {
         let directory = path.parent().unwrap_or_else(|| Path::new("")).to_str().unwrap().into();
         let obj = tobj::load_obj(path);
 
-        let (models, _materials) = obj.unwrap();
+        let (models, materials) = obj.unwrap();
         for model in models {
             let mesh = &model.mesh;
             let num_vertices = mesh.positions.len() / 3;
@@ -38,7 +38,10 @@ impl Model {
 
             meshes.push(new_mesh);
 
-            println!("mesh.positions.len {} vertices {}", mesh.positions.len(), num_vertices);
+            if let Some(material_id) = mesh.material_id {
+                let material = &materials[material_id];     
+                println!("material.diffuse_texture {} vertices {}", &material.diffuse_texture, num_vertices);
+            }
         }
 
         Self {
