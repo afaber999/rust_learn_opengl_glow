@@ -22,10 +22,8 @@ impl TexturePool {
 
     pub fn load_texture(&mut self, filename :&str) ->Rc<Texture> {
         if let Some(rc_texture) = self.texture_pool.get(filename.into()) {
-            println!("Found texture in pool: {}", filename);
             return rc_texture.clone();
         }
-        println!("Load texture into pool: {}", filename);
         let rc_texture = Rc::new( Texture::new(self.gl.clone(), &filename));
         self.texture_pool.insert(filename.into(), rc_texture.clone());
         return rc_texture;
@@ -47,7 +45,7 @@ impl Model {
 
         // retrieve the directory path of the filepath
         let directory : String = path.parent().unwrap_or_else(|| Path::new("")).to_str().unwrap().into();
-        let obj = tobj::load_obj(path, false);
+        let obj = tobj::load_obj(path, true);
 
         let (models, materials) = obj.unwrap();
         
