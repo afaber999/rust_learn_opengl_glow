@@ -88,8 +88,7 @@ fn main() {
         #[cfg(feature = "chapter-2")] "2_5_4" => main_2_5_4(),
         // #[cfg(feature = "chapter-2")] "2_6"  | "latest"  => main_2_6(),
 
-        // #[cfg(feature = "chapter-3")] "3_1"   => main_3_1(),
-        #[cfg(feature = "chapter-3")] "mesh_tester" | "latest"   => main_mesh_tester(),
+        #[cfg(feature = "chapter-3")] "3_1" | "latest"   => main_3_1(),
 
         // #[cfg(feature = "chapter-4")] "4_1_1" => main_4_1_1(),
         // #[cfg(feature = "chapter-4")] "4_1_2" => main_4_1_2(),

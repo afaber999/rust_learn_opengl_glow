@@ -1,12 +1,13 @@
 use glow::*;
 use std::rc::Rc;
+use crate::texture;
+use crate::shader::Shader;
 extern crate nalgebra_glm as glm;
 
-// #[derive(Clone)]
-pub struct TextureA {
-//     pub id: u32,
-//     pub type_: String,
-//     pub path: String,
+pub enum MeshTexture {
+    DiffuseMap(texture::Texture),
+    SpecularMap(texture::Texture),
+    NormalMap(texture::Texture),
 }
 
 pub struct Mesh {
@@ -18,6 +19,7 @@ pub struct Mesh {
     vbo_n: Option<glow::Buffer>,
     vbo_t: Option<glow::Buffer>,
     ebo: Option<glow::Buffer>,
+    textures: Vec<MeshTexture>,
     num_indices : usize, 
     num_vertices : usize, 
 }
@@ -29,7 +31,8 @@ impl Mesh {
         positions: &[f32],
         normals: &[f32],
         tex_coords: &[f32],
-        indices: &[u32] ) -> Self {
+        indices: &[u32],
+        textures: Vec<MeshTexture> ) -> Self {
 
         unsafe {
             // Create buffer
@@ -44,6 +47,7 @@ impl Mesh {
             // load positions
             gl.bind_buffer(glow::ARRAY_BUFFER, vbo_p );
             let u8_buffer = bytemuck::cast_slice(&positions);
+            // println!("Vertices {} Indices {}", positions.len(), indices.len());
             gl.buffer_data_u8_slice(glow::ARRAY_BUFFER, u8_buffer, glow::STATIC_DRAW);
 
             gl.vertex_attrib_pointer_f32(
@@ -96,6 +100,7 @@ impl Mesh {
                 vbo_n,
                 vbo_t,
                 ebo,
+                textures,
                 num_indices :  indices.len(),
                 num_vertices : positions.len(),
             }
@@ -103,10 +108,36 @@ impl Mesh {
     }
 
     /// render the mesh
-    pub fn draw(&self) {
+    pub fn draw(&self, shader :&Shader) {
         unsafe {
-            // draw mesh
+            // bind vao
             self.gl.bind_vertex_array(self.vao);
+
+            let mut diffuse_id = 0;
+            let mut specular_id = 0;
+            let mut normal_id = 0;
+
+            // set textures
+            for (idx, mesh_texture) in self.textures.iter().enumerate() {
+                let (texture,field) = match mesh_texture {
+                    MeshTexture::DiffuseMap(texture) => {
+                        diffuse_id += 1;
+                        (texture, format!("texture_diffuse{}", diffuse_id) )
+                    }
+                    MeshTexture::SpecularMap(texture) => {
+                        specular_id += 1;
+                        (texture, format!("texture_specular{}", specular_id))
+                    }
+                    MeshTexture::NormalMap(texture) => {
+                        normal_id += 1;
+                        (texture, format!("texture_normal{}", normal_id))
+                    }
+                };
+                //println!("Set mesh  texture {} to {}", &field, idx);
+                self.gl.active_texture(glow::TEXTURE0 + idx as u32);
+                shader.set_uniform_i32(&field, idx as i32);
+                texture.bind();
+            }
 
             if self.num_indices > 0  {
                 self.gl.draw_elements(
@@ -120,43 +151,6 @@ impl Mesh {
             
             self.gl.bind_vertex_array(None);
         }
-        // // bind appropriate textures
-        // let mut diffuseNr  = 0;
-        // let mut specularNr = 0;
-        // let mut normalNr   = 0;
-        // let mut heightNr   = 0;
-        // for (i, texture) in self.textures.iter().enumerate() {
-        //     gl::ActiveTexture(gl::TEXTURE0 + i as u32); // active proper texture unit before binding
-        //     // retrieve texture number (the N in diffuse_textureN)
-        //     let name = &texture.type_;
-        //     let number = match name.as_str() {
-        //         "texture_diffuse" => {
-        //             diffuseNr += 1;
-        //             diffuseNr
-        //         },
-        //         "texture_specular" => {
-        //             specularNr += 1;
-        //             specularNr
-        //         }
-        //         "texture_normal" => {
-        //             normalNr += 1;
-        //             normalNr
-        //         }
-        //         "texture_height" => {
-        //             heightNr += 1;
-        //             heightNr
-        //         }
-        //         _ => panic!("unknown texture type")
-        //     };
-            // now set the sampler to the correct texture unit
-            //let sampler = CString::new(format!("{}{}", name, number)).unwrap();
-            //gl::Uniform1i(gl::GetUniformLocation(shader.ID, sampler.as_ptr()), i as i32);
-            // and finally bind the texture
-            //gl::BindTexture(gl::TEXTURE_2D, texture.id);
-        //}
-
-        // always good practice to set everything back to defaults once configured.
-        //gl::ActiveTexture(gl::TEXTURE0);
     }
 }
 

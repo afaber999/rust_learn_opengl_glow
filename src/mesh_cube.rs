@@ -137,6 +137,6 @@ pub fn new(gl : Rc<glow::Context>,size: f32,  ) -> Mesh {
         0.0,  1.0];
 
     let indices = [];
-    Mesh::new( gl, &positions, &normals, &tex_coords, &indices)
+    Mesh::new( gl, &positions, &normals, &tex_coords, &indices, Vec::new())
 }
 
