@@ -1,11 +1,37 @@
 use std::ops::Drop;
 use std::path::Path;
 use std::rc::Rc;
+use std::collections::HashMap;
+
 use crate::{mesh::{Mesh, MeshTexture}, shader::Shader, texture::Texture};
 use tobj;
 
+
+pub struct TexturePool {
+    gl : Rc<glow::Context>,    
+    texture_pool : HashMap<String, Rc<Texture>>,
+}
+
+impl TexturePool {
+    pub fn new(gl : Rc<glow::Context>) -> Self {
+        Self {
+            gl,
+            texture_pool : HashMap::new(),
+        }
+    }
+
+    pub fn load_texture(&mut self, filename :&str) ->Rc<Texture> {
+        if let Some(rc_texture) = self.texture_pool.get(filename.into()) {
+            return rc_texture.clone();
+        }
+        let rc_texture = Rc::new( Texture::new(self.gl.clone(), &filename));
+        self.texture_pool.insert(filename.into(), rc_texture.clone());
+        return rc_texture;
+    }
+}
+
 pub struct Model {
-    pub meshes : Vec<Mesh>,
+    meshes : Vec<Mesh>,
 }
 
 impl Model {
@@ -13,12 +39,13 @@ impl Model {
     pub fn new( gl : Rc<glow::Context>, path: &str) -> Self {
         
         let mut meshes = Vec::new();
+        let mut texture_pool = TexturePool::new(gl.clone());
 
         let path = Path::new(path);
 
         // retrieve the directory path of the filepath
         let directory : String = path.parent().unwrap_or_else(|| Path::new("")).to_str().unwrap().into();
-        let obj = tobj::load_obj(path, false);
+        let obj = tobj::load_obj(path, true);
 
         let (models, materials) = obj.unwrap();
         
@@ -33,22 +60,22 @@ impl Model {
                 if material.diffuse_texture.len() > 0 {
                     println!("material.diffuse_texture {}", &material.diffuse_texture);
                     let filename = format!("{}/{}", &directory, material.diffuse_texture);
-                    let texture = Texture::new(gl.clone(), &filename);
-                    textures.push( MeshTexture::DiffuseMap( texture ));
+                    let rc_texture = texture_pool.load_texture(&filename);
+                    textures.push( MeshTexture::DiffuseMap( rc_texture ));
                 }
 
                 if material.specular_texture.len() > 0 {
                     println!("material.normal_texture {}", &material.specular_texture);
                     let filename = format!("{}/{}", &directory, material.specular_texture);
-                    let texture = Texture::new(gl.clone(), &filename);
-                    textures.push( MeshTexture::SpecularMap( texture ));
+                    let rc_texture = texture_pool.load_texture(&filename);
+                    textures.push( MeshTexture::SpecularMap( rc_texture ));
                 }
 
                 if material.normal_texture.len() > 0 {
                     println!("material.normal_texture {}", &material.normal_texture);
                     let filename = format!("{}/{}", &directory, material.normal_texture);
-                    let texture = Texture::new(gl.clone(), &filename);
-                    textures.push( MeshTexture::NormalMap( texture ));
+                    let rc_texture = texture_pool.load_texture(&filename);
+                    textures.push( MeshTexture::NormalMap( rc_texture ));
                 }
             }
 
@@ -64,7 +91,7 @@ impl Model {
         }
 
         Self {
-            meshes,            
+            meshes,
         }
     }
     pub fn draw(&self, shader: &Shader) {

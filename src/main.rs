@@ -24,10 +24,10 @@ mod _3_model_loading;
 #[cfg(feature = "chapter-3")]
 use _3_model_loading::*;
 
-// #[cfg(feature = "chapter-4")]
-// mod _4_advanced_opengl;
-// #[cfg(feature = "chapter-4")]
-// use _4_advanced_opengl::*;
+#[cfg(feature = "chapter-4")]
+mod _4_advanced_opengl;
+#[cfg(feature = "chapter-4")]
+use _4_advanced_opengl::*;
 
 // #[cfg(feature = "chapter-5")]
 // mod _5_advanced_lighting;
@@ -88,34 +88,34 @@ fn main() {
         #[cfg(feature = "chapter-2")] "2_5_4" => main_2_5_4(),
         // #[cfg(feature = "chapter-2")] "2_6"  | "latest"  => main_2_6(),
 
-        #[cfg(feature = "chapter-3")] "3_1" | "latest"   => main_3_1(),
+        #[cfg(feature = "chapter-3")] "3_1"    => main_3_1(),
 
-        // #[cfg(feature = "chapter-4")] "4_1_1" => main_4_1_1(),
-        // #[cfg(feature = "chapter-4")] "4_1_2" => main_4_1_2(),
-        // #[cfg(feature = "chapter-4")] "4_2"   => main_4_2(),
-        // #[cfg(feature = "chapter-4")] "4_3_1" => main_4_3_1(),
-        // #[cfg(feature = "chapter-4")] "4_3_2" => main_4_3_2(),
-        // #[cfg(feature = "chapter-4")] "4_5_1" => main_4_5_1(),
-        // #[cfg(feature = "chapter-4")] "4_6_1" => main_4_6_1(),
-        // #[cfg(feature = "chapter-4")] "4_6_2" => main_4_6_2(),
-        // #[cfg(feature = "chapter-4")] "4_8" => main_4_8(),
-        // #[cfg(feature = "chapter-4")] "4_9_1" => main_4_9_1(),
-        // #[cfg(feature = "chapter-4")] "4_9_2" => main_4_9_2(),
-        // #[cfg(feature = "chapter-4")] "4_9_3" => main_4_9_3(),
-        // #[cfg(feature = "chapter-4")] "4_10_1" => main_4_10_1(),
-        // #[cfg(feature = "chapter-4")] "4_10_2" => main_4_10_2(),
-        // #[cfg(feature = "chapter-4")] "4_10_3" => main_4_10_3(),
-        // #[cfg(feature = "chapter-4")] "4_11" => main_4_11(),
+        #[cfg(feature = "chapter-4")] "4_1_1" | "latest" => main_4_1_1(),
+        // #[cfg(feature = "chapter-4")] "4_1_2" | "latest"=> main_4_1_2(),
+        // #[cfg(feature = "chapter-4")] "4_2"   | "latest"=> main_4_2(),
+        // #[cfg(feature = "chapter-4")] "4_3_1" | "latest"=> main_4_3_1(),
+        // #[cfg(feature = "chapter-4")] "4_3_2" | "latest"=> main_4_3_2(),
+        // #[cfg(feature = "chapter-4")] "4_5_1" | "latest"=> main_4_5_1(),
+        // #[cfg(feature = "chapter-4")] "4_6_1" | "latest"=> main_4_6_1(),
+        // #[cfg(feature = "chapter-4")] "4_6_2" | "latest"=> main_4_6_2(),
+        // #[cfg(feature = "chapter-4")] "4_8" | "latest"=> main_4_8(),
+        // #[cfg(feature = "chapter-4")] "4_9_1" | "latest"=> main_4_9_1(),
+        // #[cfg(feature = "chapter-4")] "4_9_2" | "latest"=> main_4_9_2(),
+        // #[cfg(feature = "chapter-4")] "4_9_3" | "latest"=> main_4_9_3(),
+        // #[cfg(feature = "chapter-4")] "4_10_1" | "latest"=> main_4_10_1(),
+        // #[cfg(feature = "chapter-4")] "4_10_2" | "latest"=> main_4_10_2(),
+        // #[cfg(feature = "chapter-4")] "4_10_3" | "latest"=> main_4_10_3(),
+        // #[cfg(feature = "chapter-4")] "4_11" | "latest"=> main_4_11(),
 
-        // #[cfg(feature = "chapter-5")] "5_1" => main_5_1(),
-        // #[cfg(feature = "chapter-5")] "5_2" => main_5_2(),
-        // #[cfg(feature = "chapter-5")] "5_4" => main_5_4(),
-        // #[cfg(feature = "chapter-5")] "5_6" => main_5_6(),
+        // #[cfg(feature = "chapter-5")] "5_1" | "latest"=> main_5_1(),
+        // #[cfg(feature = "chapter-5")] "5_2" | "latest"=> main_5_2(),
+        // #[cfg(feature = "chapter-5")] "5_4" | "latest"=> main_5_4(),
+        // #[cfg(feature = "chapter-5")] "5_6" | "latest"=> main_5_6(),
 
-        // #[cfg(feature = "chapter-6")] "6_1_1" => main_6_1_1(),
-        // #[cfg(feature = "chapter-6")] "6_1_2" => main_6_1_2(),
+        // #[cfg(feature = "chapter-6")] "6_1_1" | "latest"=> main_6_1_1(),
+        // #[cfg(feature = "chapter-6")] "6_1_2" | "latest"=> main_6_1_2(),
 
-        // #[cfg(feature = "chapter-7")] "7_1" => main_7_1(),
+        // #[cfg(feature = "chapter-7")] "7_1" | "latest"=> main_7_1(),
 
         _     => println!("Unknown tutorial id")
     }
