@@ -25,7 +25,8 @@ pub fn main_3_1() {
         let gl=Rc::new( glow::Context::from_loader_function(|s| window.get_proc_address(s) as *const _));
         
         //let our_model = Model::new(gl.clone(), "resources/objects/backpack/backpack.obj");
-        let our_model = Model::new(gl.clone(), "resources/objects/nanosuit/nanosuit.obj");
+        //let our_model = Model::new(gl.clone(), "resources/objects/nanosuit/nanosuit.obj");
+        let our_model = Model::new(gl.clone(), "resources/objects/cyborg/cyborg.obj");
         //let our_model = Model::new(gl.clone(), "resources/objects/rock/rock.obj");
         //let our_model = Model::new(gl.clone(), "resources/objects/cube/cube.obj");
         

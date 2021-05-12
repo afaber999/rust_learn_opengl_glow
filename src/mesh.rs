@@ -5,9 +5,9 @@ use crate::shader::Shader;
 extern crate nalgebra_glm as glm;
 
 pub enum MeshTexture {
-    DiffuseMap(texture::Texture),
-    SpecularMap(texture::Texture),
-    NormalMap(texture::Texture),
+    DiffuseMap(Rc<texture::Texture>),
+    SpecularMap(Rc<texture::Texture>),
+    NormalMap(Rc<texture::Texture>),
 }
 
 pub struct Mesh {
