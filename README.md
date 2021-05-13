@@ -3,8 +3,8 @@ Rust port of https://github.com/JoeyDeVries/LearnOpenGL
 
 You should be able to follow the tutorials at https://learnopengl.com/ with this - the code structure has been kept similar to the original C++ but also  tried to follow the rust style guidelines as much as possible. 
 
-> This also means it's not necessarily the most idiomatic Rust code.All OpenGL calls are only abstracted by glow and wrapped in `unsafe` blocks.
-If you want a rust implementation that will closer follow the tutorial please see the [learn-opgenl-rs](https://github.com/bwasty/learn-opengl-rs).
+> However, it's not necessarily the most idiomatic Rust code.All OpenGL calls are only abstracted by glow and wrapped in `unsafe` blocks.
+If you want a rust implementation that will closer follow the C++ tutorial please see the [learn-opgenl-rs](https://github.com/bwasty/learn-opengl-rs) github repository.
 
 Run individual tutorials like this:
 `cargo run 1_3_2` (for `/src/_1_getting_started/_3_2_shaders_interpolation.rs`).
@@ -24,10 +24,9 @@ For reduced compilation times, you may only compile the code for a certain chapt
 ## Chapters
 ### [1. Getting started](src/_1_getting_started)
 **Notes**
-- You can mostly ignore the setup instructions at [Getting-started/Creating-a-window](https://learnopengl.com/#!Getting-started/Creating-a-window). Just create a new project with `cargo` and copy the dependency section from [Cargo.toml](Cargo.toml). Only `glfw-rs` might need some more setup, see [here](https://github.com/PistonDevelopers/glfw-rs#using-glfw-rs) for details. You can also use [glutin](https://github.com/tomaka/glutin) (a pure Rust alternative to GLFW), but the API is a bit different, so following the tutorials might not be as straight-forward.
-- You might be tempted to use [glium](https://github.com/glium/glium) instead of raw OpenGL. I'd recommend against that, at least in the beginning, to get a good understanding of how OpenGL really works. Also, glium is not actively maintained at the moment.
+- You can mostly ignore the setup instructions at [Getting-started/Creating-a-window](https://learnopengl.com/#!Getting-started/Creating-a-window). Just create a new project with `cargo` and copy the dependency section from [Cargo.toml](Cargo.toml). The `glow` library is used to access the OpenGL API [(see details)](https://github.com/grovesNL/glow), in addition [glutin](https://github.com/tomaka/glutin) library is used to host the OpenGL application.
 - If you experience black screens or weird rendering artifacts, check out the [`glCheckError!`](https://github.com/bwasty/learn-opengl-rs/blob/89aed9919a2347e49965820830a6aecfdda18cf3/src/_7_in_practice/_1_debugging.rs#L28-L53) macro from chapter 7.
-- exercises have been mostly omitted. You can look up the solutions in the original C++ source.
+- exercises have been mostly omitted. You can look up the solutions in the original C++ source (although it is still on my todo list).
 
 ### [2. Lighting](src/_2_lighting)
 ### [3. Model loading](src/_3_model_loading)
@@ -35,13 +34,13 @@ For reduced compilation times, you may only compile the code for a certain chapt
 - For simplicity [`tobj`](https://github.com/Twinklebear/tobj) is used instead of `assimp` (simpler interface, pure Rust and later tutorials only load OBJ files anyway). For alternatives see [here](http://arewegameyet.com/categories/3dformatloader.html) and [here](https://crates.io/search?q=assimp).
 - The `image` crate is quite slow in debug mode - loading the nanosuit textures takes so much time that it can be faster to use release mode (including compile time).
 ### [4. Advanced OpenGL](src/_4_advanced_opengl)
-**Status:** complete
+**Status:** in progress
 ### [5. Advanced Lighting](src/_5_advanced_lighting)
-**Status:** partially done (4/9).
+**Status:** todo.
 ### [6. PBR](src/_6_pbr)
-**Status:** partially done (1/2).
+**Status:** todo.
 ### [7. In Practice](src/_7_in_practice)
-**Status:** `Debugging` complete (the other two are not in the repo)
+**Status:** `Debugging` in progress (the other two are not in the repo)
 
 ----
 ### A note about the code organization
