@@ -39,10 +39,10 @@ use _4_advanced_opengl::*;
 // #[cfg(feature = "chapter-6")]
 // use _6_pbr::*;
 
-// #[cfg(feature = "chapter-7")]
-// mod _7_in_practice;
-// #[cfg(feature = "chapter-7")]
-// use _7_in_practice::*;
+#[cfg(feature = "chapter-7")]
+mod _7_in_practice;
+#[cfg(feature = "chapter-7")]
+use _7_in_practice::*;
 
 
 
@@ -90,7 +90,7 @@ fn main() {
 
         #[cfg(feature = "chapter-3")] "3_1"    => main_3_1(),
 
-        #[cfg(feature = "chapter-4")] "4_1_1" | "latest" => main_4_1_1(),
+        #[cfg(feature = "chapter-4")] "4_1_1" => main_4_1_1(),
         // #[cfg(feature = "chapter-4")] "4_1_2" | "latest"=> main_4_1_2(),
         // #[cfg(feature = "chapter-4")] "4_2"   | "latest"=> main_4_2(),
         // #[cfg(feature = "chapter-4")] "4_3_1" | "latest"=> main_4_3_1(),
@@ -115,7 +115,7 @@ fn main() {
         // #[cfg(feature = "chapter-6")] "6_1_1" | "latest"=> main_6_1_1(),
         // #[cfg(feature = "chapter-6")] "6_1_2" | "latest"=> main_6_1_2(),
 
-        // #[cfg(feature = "chapter-7")] "7_1" | "latest"=> main_7_1(),
+        #[cfg(feature = "chapter-7")] "7_1" | "latest"=> main_7_1(),
 
         _     => println!("Unknown tutorial id")
     }
