@@ -115,7 +115,8 @@ fn main() {
         // #[cfg(feature = "chapter-6")] "6_1_1" | "latest"=> main_6_1_1(),
         // #[cfg(feature = "chapter-6")] "6_1_2" | "latest"=> main_6_1_2(),
 
-        #[cfg(feature = "chapter-7")] "7_1" | "latest"=> main_7_1(),
+        #[cfg(feature = "chapter-7")] "7_1" => main_7_1(),
+        #[cfg(feature = "chapter-7")] "7_2" | "latest"=> main_7_2(),
 
         _     => println!("Unknown tutorial id")
     }

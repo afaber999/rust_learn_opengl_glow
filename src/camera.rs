@@ -9,7 +9,6 @@ pub enum Directions {
     Backward,
 }
 
-
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Camera {
     position    : glm::Vec3,
@@ -97,7 +96,9 @@ impl Camera {
     }
 
     pub fn scroll_wheel_interact(&mut self,  delta: f32 ) {
-        self.zoom += (self.zoom + delta).max(1.0).max(55.0);
+        let new_zoom = (self.zoom + delta).max(1.0).min(55.0);
+        //println!("Scroll {} + delta {} => {}", self.zoom, delta, new_zoom );
+        self.zoom = new_zoom;
     }
 
     fn calc_front(yaw:f32, pitch: f32) -> glm::Vec3 {
@@ -119,4 +120,3 @@ impl Camera {
         glm::cross(right, front).normalize()
     }
 }
-
