@@ -40,7 +40,7 @@ For reduced compilation times, you may only compile the code for a certain chapt
 ### [6. PBR](src/_6_pbr)
 **Status:** todo.
 ### [7. In Practice](src/_7_in_practice)
-**Status:** `Debugging` in progress (the other two are not in the repo)
+**Status:** `Debugging` and 'text rendering' are in progress, the 2D breakout game will be in a seperate  two repo)
 
 ----
 ### A note about the code organization
