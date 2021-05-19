@@ -8,13 +8,13 @@ extern crate nalgebra_glm as glm;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_4_1_1() {
+pub fn main_4_1_2() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _1_1_depth_testing")
+            .with_title("learn-opengl-glow => _1_2_depth_testing_view")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -27,8 +27,8 @@ pub fn main_4_1_1() {
 
         let shader = Shader::new_from_files(
             gl.clone(),
-            "src/_4_advanced_opengl/shaders/1.1.depth_testing.vs",
-            "src/_4_advanced_opengl/shaders/1.1.depth_testing.fs"
+            "src/_4_advanced_opengl/shaders/1.2.depth_testing.vs",
+            "src/_4_advanced_opengl/shaders/1.2.depth_testing.fs"
         );
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -189,13 +189,7 @@ pub fn main_4_1_1() {
                     // DRAW HERE
                     gl.clear_color(0.1, 0.1, 0.1, 1.0);
                     gl.clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
-
-                    // switch between depth func LESS and ALWAYS.
-                    // Notice the difference, when set to ALWAYS, 
-                    // the plane is fully drawn in front of cube
                     gl.enable(glow::DEPTH_TEST);
-                    //gl.depth_func(glow::LESS);
-                    gl.depth_func(glow::ALWAYS);
 
                     // setup cube transformations
                     let aspect = SCR_WIDTH as f32/ SCR_HEIGHT as f32;

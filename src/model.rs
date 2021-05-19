@@ -6,7 +6,6 @@ use std::collections::HashMap;
 use crate::{mesh::{Mesh, MeshTexture}, shader::Shader, texture::Texture};
 use tobj;
 
-
 pub struct TexturePool {
     gl : Rc<glow::Context>,    
     texture_pool : HashMap<String, Rc<Texture>>,
@@ -45,39 +44,65 @@ impl Model {
 
         // retrieve the directory path of the filepath
         let directory : String = path.parent().unwrap_or_else(|| Path::new("")).to_str().unwrap().into();
-        let obj = tobj::load_obj(path, true);
+        let mut load_options = tobj::LoadOptions::default();
+        load_options.triangulate = true;
+        load_options.single_index = true;
 
-        let (models, materials) = obj.unwrap();
+        let obj = tobj::load_obj(path, &load_options);
+
+        let (models, materials_result) = obj.unwrap();
         
-        for model in models.into_iter() {
+        for model in models.into_iter(){
 
             let mesh = &model.mesh;
-
+            
             let mut textures:Vec<MeshTexture>= Vec::new();
 
             if let Some(material_id) = mesh.material_id {
-                let material = &materials[material_id];     
-                if material.diffuse_texture.len() > 0 {
-                    println!("material.diffuse_texture {}", &material.diffuse_texture);
-                    let filename = format!("{}/{}", &directory, material.diffuse_texture);
-                    let rc_texture = texture_pool.load_texture(&filename);
-                    textures.push( MeshTexture::DiffuseMap( rc_texture ));
-                }
-
-                if material.specular_texture.len() > 0 {
-                    println!("material.normal_texture {}", &material.specular_texture);
-                    let filename = format!("{}/{}", &directory, material.specular_texture);
-                    let rc_texture = texture_pool.load_texture(&filename);
-                    textures.push( MeshTexture::SpecularMap( rc_texture ));
-                }
-
-                if material.normal_texture.len() > 0 {
-                    println!("material.normal_texture {}", &material.normal_texture);
-                    let filename = format!("{}/{}", &directory, material.normal_texture);
-                    let rc_texture = texture_pool.load_texture(&filename);
-                    textures.push( MeshTexture::NormalMap( rc_texture ));
+                if let Ok(materials) = &materials_result {
+                    let material = &materials[material_id];     
+                    if material.diffuse_texture.len() > 0 {
+                        println!("material.diffuse_texture {}", &material.diffuse_texture);
+                        let filename = format!("{}/{}", &directory, material.diffuse_texture);
+                        let rc_texture = texture_pool.load_texture(&filename);
+                        textures.push( MeshTexture::DiffuseMap( rc_texture ));
+                    }
+                    if material.specular_texture.len() > 0 {
+                        println!("material.normal_texture {}", &material.specular_texture);
+                        let filename = format!("{}/{}", &directory, material.specular_texture);
+                        let rc_texture = texture_pool.load_texture(&filename);
+                        textures.push( MeshTexture::SpecularMap( rc_texture ));
+                    }
+    
+                    if material.normal_texture.len() > 0 {
+                        println!("material.normal_texture {}", &material.normal_texture);
+                        let filename = format!("{}/{}", &directory, material.normal_texture);
+                        let rc_texture = texture_pool.load_texture(&filename);
+                        textures.push( MeshTexture::NormalMap( rc_texture ));
+                    }
                 }
             }
+
+            // println!("POSITIONS");
+            // for (idx, tc) in mesh.positions.iter().enumerate() {
+            //     if idx%3 == 0 {
+            //         print!("\npos: {} ", idx);
+            //     } 
+            //     print!(" {}", tc );
+            // }
+
+            // println!("TEXCOORDS");
+            // for (idx, tc) in mesh.texcoords.iter().enumerate() {
+            //     if idx%2 == 0 {
+            //         print!("\nTEX: {} ", idx);
+            //     }
+            //     print!(" {}", tc );
+            // }
+
+            // println!("INDICES");
+            // for idx in mesh.indices.iter() {
+            //     print!(" {}", idx );
+            // }
 
             let new_mesh = Mesh::new(
                 gl.clone(),

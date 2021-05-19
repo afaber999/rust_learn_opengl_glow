@@ -91,7 +91,7 @@ fn main() {
         #[cfg(feature = "chapter-3")] "3_1"    => main_3_1(),
 
         #[cfg(feature = "chapter-4")] "4_1_1" => main_4_1_1(),
-        // #[cfg(feature = "chapter-4")] "4_1_2" | "latest"=> main_4_1_2(),
+        #[cfg(feature = "chapter-4")] "4_1_2" => main_4_1_2(),
         // #[cfg(feature = "chapter-4")] "4_2"   | "latest"=> main_4_2(),
         // #[cfg(feature = "chapter-4")] "4_3_1" | "latest"=> main_4_3_1(),
         // #[cfg(feature = "chapter-4")] "4_3_2" | "latest"=> main_4_3_2(),
@@ -115,7 +115,8 @@ fn main() {
         // #[cfg(feature = "chapter-6")] "6_1_1" | "latest"=> main_6_1_1(),
         // #[cfg(feature = "chapter-6")] "6_1_2" | "latest"=> main_6_1_2(),
 
-        #[cfg(feature = "chapter-7")] "7_1" | "latest"=> main_7_1(),
+        #[cfg(feature = "chapter-7")] "7_1" => main_7_1(),
+        #[cfg(feature = "chapter-7")] "7_2" | "latest"=> main_7_2(),
 
         _     => println!("Unknown tutorial id")
     }
