@@ -189,7 +189,7 @@ pub fn main_7_2() {
         gl.enable_vertex_attrib_array(0);
 
         
-        let texture = Texture::new(gl.clone(),"resources/textures/awesomeface.png");
+        let texture = Texture::new(gl.clone(),"resources/textures/awesomeface.png",true);
 
         gl.bind_vertex_array(Some(0));
                     

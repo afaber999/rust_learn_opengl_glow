@@ -149,7 +149,7 @@ pub fn main_2_4_1() {
 
         gl.enable_vertex_attrib_array(0);
 
-        let texture = Texture::new(gl.clone(), "resources/textures/container2.png");
+        let texture = Texture::new(gl.clone(), "resources/textures/container2.png",true);
         
         // shader configuration
         // --------------------

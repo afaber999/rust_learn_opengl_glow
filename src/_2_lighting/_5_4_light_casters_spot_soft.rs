@@ -137,8 +137,8 @@ pub fn main_2_5_4() {
 
         gl.enable_vertex_attrib_array(2);
 
-        let diffuse_map = Texture::new(gl.clone(),"resources/textures/container2.png");
-        let specular_map = Texture::new(gl.clone(),"resources/textures/container2_specular.png");
+        let diffuse_map = Texture::new(gl.clone(),"resources/textures/container2.png",true);
+        let specular_map = Texture::new(gl.clone(),"resources/textures/container2_specular.png",true);
 
         // shader configuration
         // --------------------

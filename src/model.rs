@@ -23,7 +23,7 @@ impl TexturePool {
         if let Some(rc_texture) = self.texture_pool.get(filename.into()) {
             return rc_texture.clone();
         }
-        let rc_texture = Rc::new( Texture::new(self.gl.clone(), &filename));
+        let rc_texture = Rc::new( Texture::new(self.gl.clone(), &filename,true));
         self.texture_pool.insert(filename.into(), rc_texture.clone());
         return rc_texture;
     }

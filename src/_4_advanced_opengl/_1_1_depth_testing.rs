@@ -157,8 +157,8 @@ pub fn main_4_1_1() {
 
         // load textures
         // -------------
-        let cube_texture = Texture::new(gl.clone(),"resources/textures/marble.jpg");
-        let floor_texture = Texture::new(gl.clone(),"resources/textures/metal.png");
+        let cube_texture = Texture::new(gl.clone(),"resources/textures/marble.jpg",true);
+        let floor_texture = Texture::new(gl.clone(),"resources/textures/metal.png",true);
 
         // shader configuration
         // --------------------

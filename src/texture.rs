@@ -10,7 +10,7 @@ pub struct Texture {
 }
 
 impl Texture {
-    pub fn new( gl : Rc<glow::Context>, img_file_name :&str ) ->Self {
+    pub fn new( gl : Rc<glow::Context>, img_file_name :&str, vflip : bool ) ->Self {
 
         let texture = unsafe {
             // load and create a texture
@@ -30,7 +30,14 @@ impl Texture {
 
             // load image, create texture and generate mipmaps
             println!("Loading image: {}", img_file_name);
-            let img = image::open(img_file_name).unwrap().flipv().into_rgba8();
+
+            let img = if vflip {
+                image::open(img_file_name).unwrap().flipv().into_rgba8()
+            } else {
+                image::open(img_file_name).unwrap().into_rgba8()
+            };
+
+
             //let img = image::open(img_file_name).unwrap().into_rgba8();
 
             println!("Loading done .. ");
@@ -40,7 +47,7 @@ impl Texture {
             // Give the image to OpenGL
             gl.tex_image_2d(glow::TEXTURE_2D,
                                 0, 
-                                glow::RGB as i32, 
+                                glow::RGBA as i32, 
                                 img_w as i32, 
                                 img_h as i32,
                                 0, 
@@ -56,7 +63,16 @@ impl Texture {
             texture,
         }
     }
-   
+
+    pub fn set_wrapping(&mut self, repeat_s: u32, repeat_t: u32 ) {
+        self.bind();
+        unsafe {
+            self.gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_S, repeat_s as i32);
+            self.gl.tex_parameter_i32(glow::TEXTURE_2D, glow::TEXTURE_WRAP_T, repeat_t as i32);
+        }
+    }
+
+        
     pub fn bind(&self) {
         unsafe {
             self.gl.bind_texture(glow::TEXTURE_2D, Some(self.texture));
