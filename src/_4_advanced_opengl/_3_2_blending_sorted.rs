@@ -8,13 +8,13 @@ extern crate nalgebra_glm as glm;
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
 
-pub fn main_4_3_1() {
+pub fn main_4_3_2() {
 
     unsafe 
     {
         let event_loop = glutin::event_loop::EventLoop::new();
         let window_builder = glutin::window::WindowBuilder::new()
-            .with_title("learn-opengl-glow => _3_1_blending_discard")
+            .with_title("learn-opengl-glow => _3_2_blending_sorted")
             .with_inner_size(glutin::dpi::LogicalSize::new(SCR_WIDTH, SCR_HEIGHT));
         let window = glutin::ContextBuilder::new()
             .with_vsync(true)
@@ -27,8 +27,8 @@ pub fn main_4_3_1() {
 
         let shader = Shader::new_from_files(
             gl.clone(),
-            "src/_4_advanced_opengl/shaders/3.1.blending.vs",
-            "src/_4_advanced_opengl/shaders/3.1.blending.fs"
+            "src/_4_advanced_opengl/shaders/3.2.blending.vs",
+            "src/_4_advanced_opengl/shaders/3.2.blending.fs"
         );
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -212,7 +212,7 @@ pub fn main_4_3_1() {
         let floor_texture = Texture::new(gl.clone(),"resources/textures/metal.png",true);
 
         // this example will take into account that the texture (image) is not flipped
-        let mut trans_texture = Texture::new(gl.clone(),"resources/textures/grass.png",false);
+        let mut trans_texture = Texture::new(gl.clone(),"resources/textures/window.png",false);
 
         // set the texture edge to clamping moding , otherwise the alpha values are interpolated at the borders, 
         // which causes interpolated values of the alpha channel, therefore not all pixels might be discarded
@@ -232,7 +232,7 @@ pub fn main_4_3_1() {
         const DESIRED_FRAME_TIME :f32 = 0.02;
         let mut last_draw_time = std::time::Instant::now();
         
-        let vegiation_positions : [_;5] = [
+        let mut windows_positions : [_;5] = [
             glm::vec3(-1.5, 0.0, -0.48),
             glm::vec3( 1.5, 0.0, 0.51),
             glm::vec3( 0.0, 0.0, 0.7),
@@ -256,6 +256,9 @@ pub fn main_4_3_1() {
                     gl.clear_color(0.1, 0.1, 0.1, 1.0);
                     gl.clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
                     gl.enable(glow::DEPTH_TEST);
+                    gl.enable(glow::BLEND);
+                    gl.blend_func(glow::SRC_ALPHA, glow::ONE_MINUS_SRC_ALPHA);
+
 
                     // setup cube transformations
                     let aspect = SCR_WIDTH as f32/ SCR_HEIGHT as f32;
@@ -283,13 +286,24 @@ pub fn main_4_3_1() {
                     gl.bind_vertex_array(None);
 
 
-                    // draw vegitation
+                    // draw the windows
+                    let camera_pos = camera.get_position();
+
+                    // sort the transparent windows before rendering
+                    // ---------------------------------------------
+                    windows_positions.sort_by(|a, b| {
+                        let l2_a = glm::length2( &(camera_pos - a));
+                        let l2_b = glm::length2( &(camera_pos - b));
+                        // compare l2_b with l2_a for reverse ordering
+                        l2_b.partial_cmp(&l2_a).unwrap()
+                    });          
+            
                     gl.bind_vertex_array(Some(trans_vao));
                     gl.active_texture(glow::TEXTURE0);
                     trans_texture.bind();
 
-                    for vegitation_position in vegiation_positions {
-                        let model = glm::translate(&glm::Mat4::identity(), &vegitation_position);
+                    for window_position in windows_positions {
+                        let model = glm::translate(&glm::Mat4::identity(), &window_position);
                         shader.set_uniform_mat4("model", &model);
                         gl.draw_arrays(glow::TRIANGLES, 0,  6);
                     }
