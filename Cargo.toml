@@ -9,13 +9,13 @@ edition = "2018"
 [dependencies]
 glutin="0.26"
 nalgebra-glm = "0.13"
-glow = { version = "0.9.0" }
+glow = { version = "0.10.0" }
 log = "0.4"
 anyhow = "1.0"
-thiserror = "1.0"
+thiserror = "1.0.25"
 bytemuck="1.5"
 image="0.23"
-tobj = "3.0.0"
+tobj = "3.0.1"
 ab_glyph="0.2.11"
 
 [features]
