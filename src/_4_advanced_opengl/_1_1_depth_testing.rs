@@ -280,9 +280,9 @@ pub fn main_4_1_1() {
                 Event::LoopDestroyed => {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
-                    gl.delete_buffer(vao_cube);
+                    gl.delete_vertex_array(vao_cube);
                     gl.delete_buffer(vbo_plane);
-                    gl.delete_buffer(vao_plane);
+                    gl.delete_vertex_array(vao_plane);
                 },
                 _ => {}
             }

@@ -191,7 +191,7 @@ pub fn main_7_2() {
         
         let texture = Texture::new(gl.clone(),"resources/textures/awesomeface.png",true);
 
-        gl.bind_vertex_array(Some(0));
+        gl.bind_vertex_array(None);
                     
         // uncomment this call to draw in wireframe polygons.
         // gl.polygon_mode(glow::FRONT_AND_BACK, glow::LINE);
@@ -222,7 +222,7 @@ pub fn main_7_2() {
                     gl.draw_arrays(glow::TRIANGLES, 0, 6);
 
                     // no need to unbind it every time
-                    gl.bind_vertex_array(Some(0));
+                    gl.bind_vertex_array(None);
                     
                     window.swap_buffers().unwrap();
                 },
@@ -244,7 +244,7 @@ pub fn main_7_2() {
                 Event::LoopDestroyed => {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
-                    gl.delete_buffer(vao);
+                    gl.delete_vertex_array(vao);
                 },
                 _ => {}
             }

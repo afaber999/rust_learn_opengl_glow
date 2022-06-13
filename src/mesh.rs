@@ -14,7 +14,7 @@ pub struct Mesh {
     gl : Rc<glow::Context>,
 
     // Render data
-    vao: Option<glow::Buffer>,
+    vao: Option<glow::NativeVertexArray>,
     vbo_p: Option<glow::Buffer>,
     vbo_n: Option<glow::Buffer>,
     vbo_t: Option<glow::Buffer>,
@@ -162,7 +162,7 @@ impl Drop for Mesh {
             if let Some(id) = self.vbo_n {self.gl.delete_buffer(id);}
             if let Some(id) = self.vbo_t {self.gl.delete_buffer(id);}
             if let Some(id) = self.ebo {self.gl.delete_buffer(id);}
-            if let Some(id) = self.vao {self.gl.delete_buffer(id);}
+            if let Some(id) = self.vao {self.gl.delete_vertex_array(id);}
 
         }
     }

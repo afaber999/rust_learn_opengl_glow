@@ -177,7 +177,7 @@ pub fn main_1_3_2() {
                 Event::LoopDestroyed => {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
-                    gl.delete_buffer(vao);
+                    gl.delete_vertex_array(vao);
                     gl.delete_program(program);
                 },
                 _ => {}

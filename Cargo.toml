@@ -2,21 +2,21 @@
 name = "lean-opengl-glow"
 version = "0.1.0"
 authors = ["Albert Faber <albert@fabtronics.nl>"]
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-glutin="0.26"
-nalgebra-glm = "0.13"
-glow = { version = "0.10.0" }
+glutin = "0.28.0"
+nalgebra-glm = "0.17"
+glow = { version = "0.11.2" }
 log = "0.4"
 anyhow = "1.0"
 thiserror = "1.0.25"
-bytemuck="1.5"
-image="0.23"
+bytemuck = "1.5"
+image = "0.23"
 tobj = "3.0.1"
-ab_glyph="0.2.11"
+ab_glyph = "0.2.11"
 
 [features]
 default = [
@@ -24,10 +24,10 @@ default = [
     "chapter-2",
     "chapter-3",
     "chapter-4",
-    "chapter-5",
-    "chapter-6",
+    #"chapter-5",
+    #"chapter-6",
     "chapter-7",
-    "chapter-8"
+    "chapter-8",
 ]
 chapter-1 = []
 chapter-2 = []
@@ -37,4 +37,3 @@ chapter-5 = []
 chapter-6 = []
 chapter-7 = []
 chapter-8 = []
-

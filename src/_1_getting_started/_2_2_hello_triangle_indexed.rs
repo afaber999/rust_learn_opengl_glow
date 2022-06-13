@@ -123,16 +123,16 @@ pub fn main_1_2_2() {
         
         // note that this is allowed, the call to glVertexAttribPointer registered VBO as the 
         // vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-        gl.bind_buffer(glow::ARRAY_BUFFER, Some(0)); 
+        gl.bind_buffer(glow::ARRAY_BUFFER, None); 
 
         // remember: do NOT unbind the EBO while a VAO is active as the bound 
         // element buffer object IS stored in the VAO; keep the EBO bound.
-        //self.gl.bind_buffer(glow::ELEMENT_ARRAY_BUFFER, Some(0));
+        //self.gl.bind_buffer(glow::ELEMENT_ARRAY_BUFFER, None);
 
         // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO,
         // but this rarely happens. Modifying other VAOs requires a call to glBindVertexArray 
         // anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-        gl.bind_vertex_array(Some(0));                  
+        gl.bind_vertex_array(None);                  
 
         // uncomment this call to draw in wireframe polygons.
         // gl.polygon_mode(glow::FRONT_AND_BACK, glow::LINE);
@@ -156,7 +156,7 @@ pub fn main_1_2_2() {
                     gl.draw_elements(glow::TRIANGLES, 6, glow::UNSIGNED_INT,0);
 
                     // no need to unbind it every time
-                    gl.bind_vertex_array(Some(0));
+                    gl.bind_vertex_array(None);
                     
                     window.swap_buffers().unwrap();
                 },
@@ -179,7 +179,7 @@ pub fn main_1_2_2() {
                     // CLEANUP  
                     gl.delete_buffer(ebo);
                     gl.delete_buffer(vbo);
-                    gl.delete_buffer(vao);
+                    gl.delete_vertex_array(vao);
                     gl.delete_program(program);
                 },
                 _ => {}

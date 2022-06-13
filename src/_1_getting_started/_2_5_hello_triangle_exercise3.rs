@@ -188,7 +188,7 @@ pub fn main_1_2_5() {
 
         // not really necessary as well, but beware of calls that could affect VAOs while this one is bound 
         // (like binding element buffer objects, or enabling/disabling vertex attributes)
-        gl.bind_vertex_array(Some(0));                  
+        gl.bind_vertex_array(None);                  
 
         // uncomment this call to draw in wireframe polygons.
         // gl.polygon_mode(glow::FRONT_AND_BACK, glow::LINE);
@@ -238,8 +238,8 @@ pub fn main_1_2_5() {
                     // CLEANUP  
                     gl.delete_buffer(vbo1);
                     gl.delete_buffer(vbo2);
-                    gl.delete_buffer(vao1);
-                    gl.delete_buffer(vao2);
+                    gl.delete_vertex_array(vao1);
+                    gl.delete_vertex_array(vao2);
                     gl.delete_program(program1);
                     gl.delete_program(program2);
                 },

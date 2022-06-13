@@ -409,11 +409,11 @@ pub fn main_4_5_1() {
                 Event::LoopDestroyed => {
                     // CLEANUP  
                     gl.delete_buffer(cube_vbo);
-                    gl.delete_buffer(cube_vao);
+                    gl.delete_vertex_array(cube_vao);
                     gl.delete_buffer(plane_vbo);
-                    gl.delete_buffer(plane_vao);
+                    gl.delete_vertex_array(plane_vao);
                     gl.delete_buffer(screen_vbo);
-                    gl.delete_buffer(screen_vao);
+                    gl.delete_vertex_array(screen_vao);
                 },
                 _ => {}
             }

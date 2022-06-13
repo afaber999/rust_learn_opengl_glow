@@ -233,7 +233,7 @@ pub fn main_1_6_1() {
                 Event::LoopDestroyed => {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
-                    gl.delete_buffer(vao);
+                    gl.delete_vertex_array(vao);
                     if let Some(id) = texture_1 { gl.delete_texture(id);}
                     if let Some(id) = texture_2 { gl.delete_texture(id);}
                 },

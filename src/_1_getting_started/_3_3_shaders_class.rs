@@ -123,7 +123,7 @@ pub fn main_1_3_3() {
                 Event::LoopDestroyed => {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
-                    gl.delete_buffer(vao);
+                    gl.delete_vertex_array(vao);
                 },
                 _ => {}
             }

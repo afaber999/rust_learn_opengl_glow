@@ -312,8 +312,8 @@ pub fn main_2_6() {
                 Event::LoopDestroyed => {
                     // CLEANUP  
                     gl.delete_buffer(vbo);
-                    gl.delete_buffer(vao_cube);
-                    gl.delete_buffer(vao_light);
+                    gl.delete_vertex_array(vao_cube);
+                    gl.delete_vertex_array(vao_light);
                 },
                 _ => {}
             }
