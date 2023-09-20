@@ -9,7 +9,7 @@ edition = "2021"
 [dependencies]
 glutin = "0.28.0"
 nalgebra-glm = "0.18"
-glow = { version = "0.11.2" }
+glow = { version = "0.12.3" }
 log = "0.4"
 anyhow = "1.0"
 thiserror = "1.0.25"
