@@ -15,7 +15,7 @@ anyhow = "1.0"
 thiserror = "1.0.25"
 bytemuck = "1.5"
 image = "0.23"
-tobj = "3.0.1"
+tobj = "4.0.0"
 ab_glyph = "0.2.11"
 
 [features]

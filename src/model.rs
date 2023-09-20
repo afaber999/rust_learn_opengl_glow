@@ -60,23 +60,23 @@ impl Model {
 
             if let Some(material_id) = mesh.material_id {
                 if let Ok(materials) = &materials_result {
-                    let material = &materials[material_id];     
-                    if material.diffuse_texture.len() > 0 {
-                        println!("material.diffuse_texture {}", &material.diffuse_texture);
-                        let filename = format!("{}/{}", &directory, material.diffuse_texture);
+                    let material = &materials[material_id];
+                    if let Some( diffuse ) = &material.diffuse_texture {
+                        println!("material.diffuse_texture {}", diffuse);
+                        let filename = format!("{}/{}", &directory, diffuse);
                         let rc_texture = texture_pool.load_texture(&filename);
                         textures.push( MeshTexture::DiffuseMap( rc_texture ));
                     }
-                    if material.specular_texture.len() > 0 {
-                        println!("material.normal_texture {}", &material.specular_texture);
-                        let filename = format!("{}/{}", &directory, material.specular_texture);
+                    if let Some( specular ) = &material.specular_texture {
+                        println!("material.normal_texture {}", specular);
+                        let filename = format!("{}/{}", &directory, specular);
                         let rc_texture = texture_pool.load_texture(&filename);
                         textures.push( MeshTexture::SpecularMap( rc_texture ));
                     }
     
-                    if material.normal_texture.len() > 0 {
-                        println!("material.normal_texture {}", &material.normal_texture);
-                        let filename = format!("{}/{}", &directory, material.normal_texture);
+                    if let Some( normal ) = &material.normal_texture {
+                        println!("material.normal_texture {}", normal);
+                        let filename = format!("{}/{}", &directory, normal);
                         let rc_texture = texture_pool.load_texture(&filename);
                         textures.push( MeshTexture::NormalMap( rc_texture ));
                     }
